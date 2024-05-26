@@ -1,4 +1,4 @@
-import DashboardCard from "@/components/dashboard-card";
+import DashboardCard from "@/components/admin/dashboard-card";
 import db from "@/db";
 import { formatCurrency, formatNumber } from "@/lib/formatter";
 
