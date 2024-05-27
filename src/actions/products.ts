@@ -2,7 +2,8 @@
 
 import db from "@/db";
 import fs from "fs/promises";
-import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
@@ -52,4 +53,17 @@ export async function addProduct(prevValue: unknown, formData: FormData) {
   });
 
   redirect("/admin/products");
+}
+
+export async function toggleProductAvailability(
+  id: string,
+  isAvaialableForPurchase: boolean
+) {
+  await db.product.update({ where: { id }, data: { isAvaialableForPurchase } });
+}
+
+export async function deleteProduct(id: string) {
+  const product = await db.product.delete({ where: { id } });
+
+  if (!product || product == null) return notFound();
 }
