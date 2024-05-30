@@ -1,6 +1,8 @@
 import PageHeader from "@/components/admin/page-header";
 import ProductsTable from "@/components/admin/products/products-table";
+
 import { Button } from "@/components/ui/button";
+
 import Link from "next/link";
 
 export default function AdminProductsPage() {

@@ -1,10 +1,7 @@
 import PageHeader from "@/components/admin/page-header";
 import ProductForm from "@/components/admin/products/product-form";
-import db from "@/db";
 
-async function getProduct(id: string) {
-  return await db.product.findUnique({ where: { id } });
-}
+import { getProduct } from "@/actions/products";
 
 export default async function ProductEditPage({
   params: { id },

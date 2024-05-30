@@ -1,5 +1,3 @@
-import db from "@/db";
-
 import {
   Table,
   TableBody,
@@ -16,26 +14,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CheckCircle2, MoreVertical, XCircle } from "lucide-react";
-import Link from "next/link";
-
-import { formatCurrency, formatNumber } from "@/lib/formatter";
 
 import {
   ActiveToggleDropdownItem,
   DeleteDropdownItem,
 } from "./product-actions";
 
-async function getProducts() {
-  return await db.product.findMany({
-    select: {
-      id: true,
-      name: true,
-      priceInCents: true,
-      isAvaialableForPurchase: true,
-      _count: { select: { orders: true } },
-    },
-  });
-}
+import Link from "next/link";
+
+import { formatCurrency, formatNumber } from "@/lib/formatter";
+import { getProducts } from "@/actions/product-stats";
 
 export default async function ProductsTable() {
   const products = await getProducts();

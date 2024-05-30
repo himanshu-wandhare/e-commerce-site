@@ -4,7 +4,10 @@ import db from "@/db";
 
 import fs from "fs/promises";
 import { z } from "zod";
+import { cache } from "@/lib/cache";
+
 import { notFound, redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 const imageSchema = fileSchema.refine(
@@ -51,6 +54,9 @@ export async function addProduct(prevValue: unknown, formData: FormData) {
       imagePath,
     },
   });
+
+  revalidatePath("/");
+  revalidatePath("/products");
 
   redirect("/admin/products");
 }
@@ -106,14 +112,10 @@ export async function editProduct(
     },
   });
 
-  redirect("/admin/products");
-}
+  revalidatePath("/");
+  revalidatePath("/products");
 
-export async function toggleProductAvailability(
-  id: string,
-  isAvaialableForPurchase: boolean
-) {
-  await db.product.update({ where: { id }, data: { isAvaialableForPurchase } });
+  redirect("/admin/products");
 }
 
 export async function deleteProduct(id: string) {
@@ -123,4 +125,46 @@ export async function deleteProduct(id: string) {
 
   await fs.unlink(product.filePath);
   await fs.unlink(`public${product.imagePath}`);
+
+  revalidatePath("/");
+  revalidatePath("/products");
+}
+
+export const getProducts = cache(async () => {
+  return await db.product.findMany({
+    where: { isAvaialableForPurchase: true },
+    orderBy: { name: "asc" },
+  });
+}, ["/", "getProducts"]);
+
+export async function getProduct(id: string) {
+  return await db.product.findUnique({ where: { id } });
+}
+
+export const getMostPopularProducts = cache(
+  async () => {
+    return await db.product.findMany({
+      where: { isAvaialableForPurchase: true },
+      orderBy: { orders: { _count: "desc" } },
+    });
+  },
+  ["/", "getMostPopularProducts"],
+  { revalidate: 60 * 60 * 24 }
+);
+
+export const getNewestProducts = cache(async () => {
+  return await db.product.findMany({
+    where: { isAvaialableForPurchase: true },
+    orderBy: { createdAt: "desc" },
+  });
+}, ["/", "getNewestProducts"]);
+
+export async function toggleProductAvailability(
+  id: string,
+  isAvaialableForPurchase: boolean
+) {
+  await db.product.update({ where: { id }, data: { isAvaialableForPurchase } });
+
+  revalidatePath("/");
+  revalidatePath("/products");
 }
