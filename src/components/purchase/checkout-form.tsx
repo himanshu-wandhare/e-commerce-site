@@ -24,7 +24,7 @@ import { Product } from "@prisma/client";
 import { FormEvent, useState } from "react";
 
 import { formatCurrency } from "@/lib/formatter";
-import userOrderExists from "@/actions/orders";
+import { userOrderExists } from "@/actions/orders";
 
 type CheckoutFormProps = {
   product: Product;
