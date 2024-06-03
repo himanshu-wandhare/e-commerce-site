@@ -1,3 +1,4 @@
+import { getOrders } from "@/actions/orders";
 import DeleteDropdownItem from "@/components/admin/orders/orders-action";
 import PageHeader from "@/components/admin/page-header";
 import {
@@ -13,33 +14,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import db from "@/db";
 import { formatCurrency } from "@/lib/formatter";
 import { MoreVertical } from "lucide-react";
 
-async function getOrders() {
-  return await db.order.findMany({
-    select: {
-      id: true,
-      pricePaidInCents: true,
-      product: { select: { name: true } },
-      user: { select: { email: true } },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-}
+export default async function SalesPage() {
+  const orders = await getOrders();
 
-export default function SalesPage() {
   return (
     <>
       <PageHeader>Sales</PageHeader>
-      <SalesTable />
+      <SalesTable orders={orders} />
     </>
   );
 }
 
-async function SalesTable() {
-  const orders = await getOrders();
+type SalesTableProps = {
+  orders: {
+    id: string;
+    pricePaidInCents: number;
+    user: {
+      email: string;
+    };
+    product: {
+      name: string;
+    };
+  }[];
+};
+
+async function SalesTable({ orders }: SalesTableProps) {
   if (orders.length === 0) return <p>No sales found</p>;
 
   return (

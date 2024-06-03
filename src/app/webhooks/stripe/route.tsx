@@ -3,6 +3,8 @@ import Stripe from "stripe";
 import { Resend } from "resend";
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import PurchaseReceiptEmail from "@/email/purchase-receipt-email";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const resend = new Resend(process.env.RESEND_API_KEY as string);
@@ -48,11 +50,21 @@ export async function POST(req: NextRequest) {
     });
 
     await resend.emails.send({
-      from: `Support ${process.env.SENDER_EMAIL}`,
+      from: `Support <${process.env.SENDER_EMAIL}>`,
       to: email,
       subject: "Order Confirmation",
-      react: "<h1>HI</h1>",
+      react: (
+        <PurchaseReceiptEmail
+          product={product}
+          order={order}
+          downloadVerificationId={downloadVerification.id}
+        />
+      ),
     });
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/users");
+    revalidatePath("/admin/sales");
   }
 
   return new NextResponse();

@@ -17,17 +17,27 @@ import { getUsers } from "@/actions/users";
 import { formatCurrency, formatNumber } from "@/lib/formatter";
 import { MoreVertical } from "lucide-react";
 
-export default function UsersPage() {
+export default async function UsersPage() {
+  const users = await getUsers();
   return (
     <>
       <PageHeader>Customers</PageHeader>
-      <UsersTable />
+      <UsersTable users={users} />
     </>
   );
 }
 
-async function UsersTable() {
-  const users = await getUsers();
+type UserTableProps = {
+  users: {
+    id: string;
+    orders: {
+      pricePaidInCents: number;
+    }[];
+    email: string;
+  }[];
+};
+
+async function UsersTable({ users }: UserTableProps) {
   if (users.length === 0) return <p>No products found</p>;
 
   return (
