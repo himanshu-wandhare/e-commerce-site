@@ -16,6 +16,11 @@ import {
 import { getUsers } from "@/actions/users";
 import { formatCurrency, formatNumber } from "@/lib/formatter";
 import { MoreVertical } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Customers",
+};
 
 export default async function UsersPage() {
   const users = await getUsers();

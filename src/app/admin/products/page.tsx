@@ -3,7 +3,12 @@ import ProductsTable from "@/components/admin/products/products-table";
 
 import { Button } from "@/components/ui/button";
 
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Products",
+};
 
 export default function AdminProductsPage() {
   return (

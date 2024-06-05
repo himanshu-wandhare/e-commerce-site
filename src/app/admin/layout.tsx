@@ -1,7 +1,12 @@
 import Nav from "@/components/nav";
 import NavLink from "@/components/nav-link";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 export default function AdminLayout({
   children,

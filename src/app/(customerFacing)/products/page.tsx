@@ -4,6 +4,11 @@ import ProductCardSkeleton from "@/components/products/product-card-skeletion";
 import { ProductCardSuspense } from "@/components/products/product-card-suspense";
 
 import { getProducts } from "@/actions/products";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Products",
+};
 
 export default function ProductsPage() {
   return (

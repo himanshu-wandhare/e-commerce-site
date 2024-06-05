@@ -16,6 +16,11 @@ import {
 } from "@/components/ui/table";
 import { formatCurrency } from "@/lib/formatter";
 import { MoreVertical } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sales",
+};
 
 export default async function SalesPage() {
   const orders = await getOrders();

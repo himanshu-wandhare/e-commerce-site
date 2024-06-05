@@ -63,6 +63,7 @@ export async function POST(req: NextRequest) {
     });
 
     revalidatePath("/admin");
+    revalidatePath("/admin/products");
     revalidatePath("/admin/users");
     revalidatePath("/admin/sales");
   }
