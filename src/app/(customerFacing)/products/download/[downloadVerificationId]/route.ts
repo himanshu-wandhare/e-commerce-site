@@ -1,5 +1,4 @@
 import db from "@/db";
-import { notFound } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 
@@ -26,7 +25,7 @@ export async function GET(
     const extension = product.filePath.split(".").pop();
     const { size } = await fs.stat(product.filePath);
 
-    return new NextResponse(file, {
+    return new NextResponse(new Uint8Array(file), {
         headers: {
             "Content-Disposition": `attachment; filename="${product.name}.${extension}"`,
             "Content-Length": size.toString(),
