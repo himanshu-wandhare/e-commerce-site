@@ -25,7 +25,7 @@ export async function GET(
     const extension = product.filePath.split(".").pop();
     const { size } = await fs.stat(product.filePath);
 
-    return new NextResponse(new Uint8Array(file), {
+    return new NextResponse(file, {
         headers: {
             "Content-Disposition": `attachment; filename="${product.name}.${extension}"`,
             "Content-Length": size.toString(),
